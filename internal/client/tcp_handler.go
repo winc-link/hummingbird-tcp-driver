@@ -14,8 +14,6 @@
 
 package client
 
-import "github.com/winc-link/hummingbird-tcp-driver/internal/device"
-
 type TcpDataHandlers func(deviceSn string, data []byte) (retBuff []byte, err error)
 
 // TcpDataHandler tcp数据处理
@@ -24,8 +22,5 @@ func TcpDataHandler(deviceSn string, data []byte) (retBuff []byte, err error) {
 }
 
 func closeConn(deviceSn string) {
-	dev, err := device.GetDevice(deviceSn)
-	if err != nil {
-		dev.Offline()
-	}
+
 }

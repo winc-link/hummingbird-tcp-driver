@@ -15,9 +15,12 @@
 package server
 
 import (
+	"github.com/winc-link/hummingbird-sdk-go/service"
 	"net"
 	"sync"
 )
+
+var GlobalDriverService *service.DriverService
 
 type TcpServer struct {
 	ClientCons map[string]*Connect
@@ -38,7 +41,8 @@ func init() {
 }
 
 // Start 启动tcp服务器
-func (t *TcpServer) Start(tdh TcpDataHandlers) {
+func (t *TcpServer) Start(sd *service.DriverService, tdh TcpDataHandlers) {
+	GlobalDriverService = sd
 	server, err := net.Listen("tcp", "")
 	if err != nil {
 		panic(err)

@@ -14,19 +14,10 @@
 
 package device
 
-import (
-	"github.com/winc-link/hummingbird-sdk-go/model"
-	"github.com/winc-link/hummingbird-tcp-driver/internal/driver"
-)
-
 type Dev interface {
 	GetDeviceId() string
 	GetDeviceSn() string
-	Online() error
-	Offline() error
 	IsOnline() bool
-	PropertyReport(report model.PropertyReport) error
-	EventReport(report model.EventReport) error
 }
 
 type Device struct {
@@ -44,32 +35,8 @@ func (d *Device) GetDeviceSn() string {
 	return d.DeviceSn
 }
 
-func (d *Device) Online() error {
-	return driver.GlobalDriverService.Online(d.DeviceId)
-}
-
-func (d *Device) Offline() error {
-	return driver.GlobalDriverService.Offline(d.DeviceId)
-}
-
 func (d *Device) IsOnline() bool {
 	return d.isOnline
-}
-
-func (d *Device) PropertyReport(report model.PropertyReport) error {
-	_, err := driver.GlobalDriverService.PropertyReport(d.DeviceId, report)
-	if err != nil {
-		driver.GlobalDriverService.GetLogger().Errorf("device [%s] report property error:%s ", d.DeviceId, err.Error())
-	}
-	return err
-}
-
-func (d *Device) EventReport(report model.EventReport) error {
-	_, err := driver.GlobalDriverService.EventReport(d.DeviceId, report)
-	if err != nil {
-		driver.GlobalDriverService.GetLogger().Errorf("device [%s] report event error:%s ", d.DeviceId, err.Error())
-	}
-	return err
 }
 
 func NewDevice(deviceId, deviceSn, ProductId string, isOnline bool) Dev {

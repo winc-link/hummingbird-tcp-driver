@@ -17,7 +17,6 @@ package server
 import (
 	"github.com/winc-link/hummingbird-sdk-go/model"
 	"github.com/winc-link/hummingbird-tcp-driver/internal/device"
-	"github.com/winc-link/hummingbird-tcp-driver/internal/driver"
 	"net"
 	"strconv"
 )
@@ -33,7 +32,7 @@ func serverConnHandler(conn net.Conn, tdh TcpDataHandlers) {
 		var buf [8]byte
 		n, err := conn.Read(buf[:])
 		if err != nil {
-			driver.GlobalDriverService.GetLogger().Errorf("Read from tcp server failed,err:", err)
+			GlobalDriverService.GetLogger().Errorf("Read from tcp server failed,err:", err)
 			closeConn(deviceSn)
 			break
 		}
@@ -55,7 +54,7 @@ func serverConnHandler(conn net.Conn, tdh TcpDataHandlers) {
 func closeConn(deviceSn string) {
 	dev, err := device.GetDevice(deviceSn)
 	if err != nil {
-		dev.Offline()
+		GlobalDriverService.Offline(dev.GetDeviceId())
 	}
 	tcpServer.DeleteClientByDeviceId(deviceSn)
 }
@@ -72,14 +71,14 @@ func TcpDataHandler(deviceSn string, data []byte) (retBuff []byte, err error) {
 			external    = map[string]string{}
 		)
 
-		newDevice, err := driver.GlobalDriverService.CreateDevice(model.NewAddDevice(deviceName, productId, deviceSn, description, external))
+		newDevice, err := GlobalDriverService.CreateDevice(model.NewAddDevice(deviceName, productId, deviceSn, description, external))
 		if err != nil {
-			driver.GlobalDriverService.GetLogger().Errorf("Create device [%s] err:", deviceSn, err.Error())
+			GlobalDriverService.GetLogger().Errorf("Create device [%s] err:", deviceSn, err.Error())
 			return nil, err
 		}
 		//设备上线
-		if err = driver.GlobalDriverService.Online(newDevice.Id); err != nil {
-			driver.GlobalDriverService.GetLogger().Errorf("Device online [%s] err:", deviceSn, err.Error())
+		if err = GlobalDriverService.Online(newDevice.Id); err != nil {
+			GlobalDriverService.GetLogger().Errorf("Device online [%s] err:", deviceSn, err.Error())
 		}
 		//把设备注册到device manage中。
 		dev = device.NewDevice(newDevice.Id, deviceSn, newDevice.ProductId, true)
@@ -87,17 +86,17 @@ func TcpDataHandler(deviceSn string, data []byte) (retBuff []byte, err error) {
 
 	} else {
 		if !dev.IsOnline() {
-			dev.Online()
+			GlobalDriverService.Online(dev.GetDeviceId())
 		}
 	}
 
 	//数据处理，假如data[0]为设备标识、data[1]代表温度、data[2]代表湿度
-	err = dev.PropertyReport(model.NewPropertyReport(false, map[string]model.PropertyData{
+	_, err = GlobalDriverService.PropertyReport(dev.GetDeviceId(), model.NewPropertyReport(false, map[string]model.PropertyData{
 		"temperature": model.NewPropertyData(string(data[1])),
 		"humidity":    model.NewPropertyData(string(data[2])),
 	}))
 	if err != nil {
-		driver.GlobalDriverService.GetLogger().Errorf("Device [%s] report data err:", deviceSn, err.Error())
+		GlobalDriverService.GetLogger().Errorf("Device [%s] report data err:", deviceSn, err.Error())
 	}
 	//如果需要做tcp消息回复，请按照业务逻辑编写相应的resBuff
 	resBuff := make([]byte, 3)
