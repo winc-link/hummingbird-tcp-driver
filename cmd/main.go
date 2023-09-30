@@ -16,6 +16,7 @@ package main
 
 import (
 	"context"
+	"github.com/winc-link/hummingbird-tcp-driver/config"
 	"github.com/winc-link/hummingbird-tcp-driver/internal/driver"
 	"os"
 	"os/signal"
@@ -28,6 +29,7 @@ import (
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	driverService := service.NewDriverService("hummingbird-tcp-driver", commons.HummingbirdIot)
+	config.InitConfig(driverService)
 	tcpDriver := driver.NewTcpProtocolDriver(ctx, driverService)
 	go func() {
 		if err := driverService.Start(tcpDriver); err != nil {

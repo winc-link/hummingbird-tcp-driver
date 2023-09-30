@@ -20,5 +20,4 @@ STOPSIGNAL SIGKILL
 # Start
 ENTRYPOINT [ "/app/driver-linux-amd64" ]
 
-#docker buildx build --platform linux/amd64 -t registry.cn-shanghai.aliyuncs.com/winc-link/simple-driver:tcp-demo -f docker/Dockerfile . --push
 

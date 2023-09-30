@@ -12,41 +12,30 @@
  * the License.
  *******************************************************************************/
 
-package client
+package config
 
 import (
+	"encoding/json"
 	"github.com/winc-link/hummingbird-sdk-go/service"
-	"net"
 )
 
-type TcpClient struct {
-	sd *service.DriverService
+var baseConfig *BaseConfig
+
+type BaseConfig struct {
+	//用户自行定义结构体中信息。
 }
 
-func (t *TcpClient) Start(tdh TcpDataHandlers) {
-	conn, err := net.Dial("tcp", "")
-	if err != nil {
-		panic(err)
-	}
-
-	defer conn.Close()
-
-	var deviceSn string
-	for {
-
-		var buf [8]byte
-		n, err := conn.Read(buf[:])
+func InitConfig(sd *service.DriverService) {
+	customParam := sd.GetCustomParam()
+	baseConfig = &BaseConfig{}
+	if customParam != "" {
+		err := json.Unmarshal([]byte(customParam), &baseConfig)
 		if err != nil {
-			t.sd.GetLogger().Errorf("Read from tcp cline failed,err:", err)
-			closeConn(deviceSn)
-			break
+			sd.GetLogger().Error(err)
 		}
-
-		bytes, err := tdh(deviceSn, buf[:n])
-		if err != nil {
-			return
-		}
-		conn.Write(bytes)
 	}
+}
 
+func GetConfig() *BaseConfig {
+	return baseConfig
 }
