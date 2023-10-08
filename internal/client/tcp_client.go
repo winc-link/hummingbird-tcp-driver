@@ -48,5 +48,4 @@ func (t *TcpClient) Start(tdh TcpDataHandlers) {
 		}
 		conn.Write(bytes)
 	}
-
 }

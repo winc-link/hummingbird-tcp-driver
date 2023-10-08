@@ -46,10 +46,12 @@ func (dr TcpProtocolDriver) ProductNotify(ctx context.Context, t commons.Product
 	panic("implement me")
 }
 
-// Stop 蜂鸟物联网平台通知
+// Stop 驱动退出通知。
 func (dr TcpProtocolDriver) Stop(ctx context.Context) error {
-	//TODO implement me
-	panic("implement me")
+	for _, dev := range device.GetAllDevice() {
+		dr.sd.Offline(dev.GetDeviceId())
+	}
+	return nil
 }
 
 // HandlePropertySet 设备属性设置
@@ -87,10 +89,9 @@ func (dr TcpProtocolDriver) HandleServiceExecute(ctx context.Context, deviceId s
 }
 
 // NewTcpProtocolDriver Tcp协议驱动
-func NewTcpProtocolDriver(ctx context.Context, sd *service.DriverService) *TcpProtocolDriver {
+func NewTcpProtocolDriver(sd *service.DriverService) *TcpProtocolDriver {
 	loadDevices(sd)
 	go server.GetTcpServer().Start(sd, server.TcpDataHandler)
-	go cancel(sd, ctx)
 	return &TcpProtocolDriver{
 		sd: sd,
 	}
@@ -99,18 +100,6 @@ func NewTcpProtocolDriver(ctx context.Context, sd *service.DriverService) *TcpPr
 // loadDevices 获取所有已经创建成功的设备，保存在内存中。
 func loadDevices(sd *service.DriverService) {
 	for _, dev := range sd.GetDeviceList() {
-		device.NewDevice(dev.Id, dev.DeviceSn, dev.ProductId, dev.Status == commons.DeviceOnline)
-	}
-}
-
-// cancel 监听驱动退出，如果驱动退出则把此驱动关联的设备设置成离线
-func cancel(sd *service.DriverService, ctx context.Context) {
-	for {
-		select {
-		case <-ctx.Done():
-			for _, dev := range device.GetAllDevice() {
-				sd.Offline(dev.GetDeviceId())
-			}
-		}
+		device.PutDevice(dev.DeviceSn, device.NewDevice(dev.Id, dev.DeviceSn, dev.ProductId, dev.Status == commons.DeviceOnline))
 	}
 }
