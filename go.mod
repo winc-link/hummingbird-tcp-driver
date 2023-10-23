@@ -2,7 +2,7 @@ module github.com/winc-link/hummingbird-tcp-driver
 
 go 1.18
 
-require github.com/winc-link/hummingbird-sdk-go v0.0.0-20230927074657-56b522b52507
+require github.com/winc-link/hummingbird-sdk-go v0.0.0-20231023114328-0ad89ef864bf
 
 require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
@@ -10,7 +10,7 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/natefinch/lumberjack v2.0.0+incompatible // indirect
-	github.com/winc-link/edge-driver-proto v0.0.0-20230927064940-f31381cfe585 // indirect
+	github.com/winc-link/edge-driver-proto v0.0.0-20231023113502-daf15ee41883 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.24.0 // indirect
