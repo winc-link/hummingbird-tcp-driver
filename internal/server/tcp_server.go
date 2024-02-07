@@ -43,7 +43,7 @@ func init() {
 // Start 启动tcp服务器
 func (t *TcpServer) Start(sd *service.DriverService, tdh TcpDataHandlers) {
 	GlobalDriverService = sd
-	server, err := net.Listen("tcp", "")
+	server, err := net.Listen("tcp", "0.0.0.0:52010")
 	if err != nil {
 		panic(err)
 	}
@@ -63,6 +63,14 @@ func GetTcpServer() *TcpServer {
 
 func (t *TcpServer) GetConnectByDeviceSn(deviceSn string) *Connect {
 	return t.ClientCons[deviceSn]
+}
+
+func (t *TcpServer) SetConnectByDeviceSn(deviceSn string, conn net.Conn) {
+	t.Lock.Lock()
+	defer t.Lock.Unlock()
+	t.ClientCons[deviceSn] = &Connect{
+		Conn: conn,
+	}
 }
 
 func (t *TcpServer) DeleteClientByDeviceId(deviceSn string) {

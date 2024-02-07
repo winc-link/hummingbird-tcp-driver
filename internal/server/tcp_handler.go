@@ -15,13 +15,14 @@
 package server
 
 import (
+	"encoding/hex"
 	"github.com/winc-link/hummingbird-sdk-go/model"
+	"github.com/winc-link/hummingbird-tcp-driver/internal/common"
 	"github.com/winc-link/hummingbird-tcp-driver/internal/device"
 	"net"
-	"strconv"
 )
 
-type TcpDataHandlers func(deviceSn string, data []byte) (retBuff []byte, err error)
+type TcpDataHandlers func(deviceSn string, data common.DataPacket) (retBuff []byte, err error)
 
 // serverConnHandler 用户可以根据项目需要自行修改此方法的业务逻辑！
 func serverConnHandler(conn net.Conn, tdh TcpDataHandlers) {
@@ -29,25 +30,37 @@ func serverConnHandler(conn net.Conn, tdh TcpDataHandlers) {
 
 	var deviceSn string
 	for {
-		var buf [8]byte
+		var buf [500]byte
 		n, err := conn.Read(buf[:])
 		if err != nil {
 			GlobalDriverService.GetLogger().Errorf("Read from tcp server failed,err:", err)
 			closeConn(deviceSn)
 			break
 		}
-		deviceSn = strconv.Itoa(int(buf[0]))
-		if tcpServer.ClientCons[deviceSn] == nil {
-			tcpServer.ClientCons[deviceSn] = &Connect{
-				Conn: conn,
-			}
-		}
+		encodedStr := hex.EncodeToString(buf[:n])
+		GlobalDriverService.GetLogger().Info("Read buf to string:", encodedStr)
 
-		bytes, err := tdh(deviceSn, buf[:n])
-		if err != nil {
-			return
+		var dataPacket common.DataPacket
+		dataPacket = common.DataPacket(encodedStr)
+
+		if dataPacket.Verify() && dataPacket.IsDataPacket() {
+			deviceSn = dataPacket.DeviceSn()
+			//if GetTcpServer().GetConnectByDeviceSn(deviceSn) == nil {
+			//	//GlobalDriverService.GetLogger().Info("Set conn:", deviceSn)
+			//	GetTcpServer().SetConnectByDeviceSn(deviceSn, conn)
+			//}
+			//deviceSn = dataPacket.DeviceSn()
+			if tcpServer.ClientCons[deviceSn] == nil {
+				tcpServer.ClientCons[deviceSn] = &Connect{
+					Conn: conn,
+				}
+			}
+			_, err = tdh(deviceSn, dataPacket)
+			if err != nil {
+				return
+			}
+			//conn.Write(bytes)
 		}
-		conn.Write(bytes)
 	}
 }
 
@@ -60,13 +73,13 @@ func closeConn(deviceSn string) {
 }
 
 // TcpDataHandler tcp数据处理
-func TcpDataHandler(deviceSn string, data []byte) (retBuff []byte, err error) {
+func TcpDataHandler(deviceSn string, data common.DataPacket) (retBuff []byte, err error) {
 	dev, err := device.GetDevice(deviceSn)
 	if err != nil {
 		//新设备，做创建设备并且上线的业务逻辑。
 		var (
-			deviceName  = ""
-			productId   = ""
+			deviceName  = deviceSn
+			productId   = "72050419"
 			description = ""
 			external    = map[string]string{}
 		)
@@ -86,22 +99,29 @@ func TcpDataHandler(deviceSn string, data []byte) (retBuff []byte, err error) {
 
 	} else {
 		if !dev.IsOnline() {
-			GlobalDriverService.Online(dev.GetDeviceId())
+			err = GlobalDriverService.Online(dev.GetDeviceId())
+			if err == nil {
+				//device.PutDevice()
+			}
 		}
 	}
 
-	//数据处理，假如data[0]为设备标识、data[1]代表温度、data[2]代表湿度
 	_, err = GlobalDriverService.PropertyReport(dev.GetDeviceId(), model.NewPropertyReport(false, map[string]model.PropertyData{
-		"temperature": model.NewPropertyData(string(data[1])),
-		"humidity":    model.NewPropertyData(string(data[2])),
+		"voltage":          model.NewPropertyData(data.Voltage()),
+		"current":          model.NewPropertyData(data.Current()),
+		"power":            model.NewPropertyData(data.Power()),
+		"frequency":        model.NewPropertyData(data.Frequency()),
+		"powerFactor":      model.NewPropertyData(data.PowerFactor()),
+		"powerConsumption": model.NewPropertyData(data.PowerConsumption()),
+		"mStatus":          model.NewPropertyData(data.MStatus()),
 	}))
 	if err != nil {
 		GlobalDriverService.GetLogger().Errorf("Device [%s] report data err:", deviceSn, err.Error())
 	}
 	//如果需要做tcp消息回复，请按照业务逻辑编写相应的resBuff
-	resBuff := make([]byte, 3)
-	resBuff[0] = 0x41               //包头
-	resBuff[1] = byte(len(resBuff)) //长度
-	resBuff[2] = 0xa3               //命令码
+	resBuff := make([]byte, 0)
+	//resBuff[0] = 0x41               //包头
+	//resBuff[1] = byte(len(resBuff)) //长度
+	//resBuff[2] = 0xa3               //命令码
 	return resBuff, nil
 }

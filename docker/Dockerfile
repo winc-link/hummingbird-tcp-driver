@@ -12,6 +12,7 @@ FROM alpine:3.12
 
 COPY --from=builder /simple-driver/cmd/build/driver-linux-amd64 /app/
 
+EXPOSE 52010
 
 RUN mkdir /logs
 

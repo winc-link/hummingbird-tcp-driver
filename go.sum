@@ -831,6 +831,8 @@ github.com/rogpeppe/go-internal v1.6.1/go.mod h1:xXDCJY+GAPziupqXw64V24skbSoqbTE
 github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
 github.com/ruudk/golang-pdf417 v0.0.0-20181029194003-1af4ab5afa58/go.mod h1:6lfFZQK844Gfx8o5WFuvpxWRwnSoipWe/p622j1v06w=
 github.com/ruudk/golang-pdf417 v0.0.0-20201230142125-a7e3863a1245/go.mod h1:pQAZKsJ8yyVxGRWYNEm9oFB8ieLgKFnamEyDmSA0BRk=
+github.com/shopspring/decimal v1.3.1 h1:2Usl1nmF/WZucqkFZhnfFYxxxu8LG21F6nPQBE5gKV8=
+github.com/shopspring/decimal v1.3.1/go.mod h1:DKyhrW/HYNuLGql+MJL6WCR6knT2jwCFRcu2hWCYk4o=
 github.com/spaolacci/murmur3 v0.0.0-20180118202830-f09979ecbc72/go.mod h1:JwIasOWyU6f++ZhiEuf87xNszmSA2myDM2Kzu9HwQUA=
 github.com/spf13/afero v1.3.3/go.mod h1:5KUK8ByomD5Ti5Artl0RtHeI5pTF7MIDuXL3yY520V4=
 github.com/spf13/afero v1.6.0/go.mod h1:Ai8FlHk4v/PARR026UzYexafAt9roJ7LcLMAmO6Z93I=
@@ -849,10 +851,10 @@ github.com/stretchr/testify v1.8.0/go.mod h1:yNjHg4UonilssWZ8iaSj1OCr/vHnekPRkoO
 github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/stretchr/testify v1.8.3 h1:RP3t2pwF7cMEbC1dqtB6poj3niw/9gnV4Cjg5oW5gtY=
 github.com/stretchr/testify v1.8.3/go.mod h1:sz/lmYIOXD/1dqDmKjjqLyZ2RngseejIcXlSw2iwfAo=
-github.com/winc-link/edge-driver-proto v0.0.0-20231023113502-daf15ee41883 h1:Zy0N0GuoJ63Vj9E916VpqJzaDQ//Uo5xcVrHThbp8so=
-github.com/winc-link/edge-driver-proto v0.0.0-20231023113502-daf15ee41883/go.mod h1:H6w+UUMgmrTB+A/vJLm+kwtLb1dcA02IV9wj1UtO3Ws=
-github.com/winc-link/hummingbird-sdk-go v0.0.0-20231023114328-0ad89ef864bf h1:GtzfqKzUsUBZRSQyQtoLHk19o2qcrxj2PfhDc93EyVE=
-github.com/winc-link/hummingbird-sdk-go v0.0.0-20231023114328-0ad89ef864bf/go.mod h1:eY9qA9Tr4ZcQF6kqdqlQlAoDO7ldFJ4myt4U5HGsTK4=
+github.com/winc-link/edge-driver-proto v0.0.0-20231026095244-f5aaece7aee1 h1:2fEBu0UkyHP/AXINtsw1g+mcLixGcIOob2MP+OSFP9c=
+github.com/winc-link/edge-driver-proto v0.0.0-20231026095244-f5aaece7aee1/go.mod h1:H6w+UUMgmrTB+A/vJLm+kwtLb1dcA02IV9wj1UtO3Ws=
+github.com/winc-link/hummingbird-sdk-go v0.0.0-20231029081056-0fbd6a6e006c h1:5mM/xI4YkmE6tfEbZLvdZ+WI4r7BfRENlfJZkhdAhK4=
+github.com/winc-link/hummingbird-sdk-go v0.0.0-20231029081056-0fbd6a6e006c/go.mod h1:z5TKFbn6aJtRv22dGL+2O+11ISrZwhs+oVVgSvPHEVA=
 github.com/yuin/goldmark v1.1.25/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.27/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
