@@ -1,0 +1,24 @@
+CustomParam = "{\r\n    \"tsl_param_verify\":true\r\n}\r\n"
+
+[Logger]
+FileName = "./logs/driver.log"
+LogLevel = "INFO"
+
+[Clients]
+[Clients.Core]
+Address = "81.68.82.102:57081"
+UseTLS = false
+CertFilePath = ""
+ClientId = ""
+Username = ""
+Password = ""
+
+[Service]
+ID = "73813051"
+Name = "HTTP协议驱动-73813051"
+Activated = false
+[Service.Server]
+Address = "0.0.0.0:33121"
+UseTLS = false
+CertFile = ""
+KeyFile = ""

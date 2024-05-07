@@ -22,7 +22,7 @@ import (
 )
 
 func main() {
-	driverService := service.NewDriverService("hummingbird-tcp-driver", commons.HummingbirdIot)
+	driverService := service.NewDriverService("hummingbird-official-tcp-driver", commons.HummingbirdIot)
 	config.InitConfig(driverService)
 	tcpDriver := driver.NewTcpProtocolDriver(driverService)
 	if err := driverService.Start(tcpDriver); err != nil {

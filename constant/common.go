@@ -12,38 +12,18 @@
  * the License.
  *******************************************************************************/
 
-package device
+package constant
 
-type Dev interface {
-	GetDeviceId() string
-	GetDeviceSn() string
-	IsOnline() bool
-}
-
-type Device struct {
-	ProductId string
-	DeviceId  string
-	DeviceSn  string
-	isOnline  bool
-}
-
-func (d *Device) GetDeviceId() string {
-	return d.DeviceId
-}
-
-func (d *Device) GetDeviceSn() string {
-	return d.DeviceSn
-}
-
-func (d *Device) IsOnline() bool {
-	return d.isOnline
-}
-
-func NewDevice(deviceId, deviceSn, ProductId string, isOnline bool) Dev {
-	return &Device{
-		DeviceId:  deviceId,
-		DeviceSn:  deviceSn,
-		ProductId: ProductId,
-		isOnline:  isOnline,
-	}
-}
+const (
+	AuthOperation                = iota + 1 //鉴权
+	PropertyReportOperation                 //属性上报
+	PropertyReportReplyOperation            //属性上报响应
+	EventReportOperation                    //事件上报
+	EventReportReplyOperation               //事件上报响应
+	PropertySet                             //属性设置
+	PropertySetReplyOperation               //属性设置响应
+	PropertyGet                             //属性获取
+	PropertyGetReplyOperation               //属性获取响应
+	ServiceExecute                          //服务调用
+	ServiceExecuteReplyOperation            //服务调用响应
+)

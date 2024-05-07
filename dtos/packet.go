@@ -12,23 +12,20 @@
  * the License.
  *******************************************************************************/
 
-package server
+package dtos
 
-import (
-	"github.com/winc-link/hummingbird-tcp-driver/config"
-	"net"
-)
+import "encoding/json"
 
-type TcpDataHandlers func(deviceSn string, data []byte) (retBuff []byte, err error)
+type Packet struct {
+	PackageLength int // len(payload)
+	HeaderLength  int
+	Version       int
+	Operation     int
+	SequenceID    string
+	Data          []byte
+}
 
-// serverConnHandler 用户可以根据项目需要自行修改此方法的业务逻辑！
-func serverConnHandler(conn net.Conn) {
-	switch config.GetConfig().TcpUnpackRule.RuleName {
-	case config.RuleDelimiter:
-		delimiterConnHandler(conn)
-	case config.RuleFixedLength:
-		fixLengthConnHandler(conn)
-	default:
-		delimiterConnHandler(conn)
-	}
+func (p *Packet) MessageToString() string {
+	b, _ := json.Marshal(p)
+	return string(b)
 }

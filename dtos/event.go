@@ -12,23 +12,22 @@
  * the License.
  *******************************************************************************/
 
-package server
+package dtos
 
 import (
-	"github.com/winc-link/hummingbird-tcp-driver/config"
-	"net"
+	"encoding/json"
+	"github.com/winc-link/hummingbird-sdk-go/model"
 )
 
-type TcpDataHandlers func(deviceSn string, data []byte) (retBuff []byte, err error)
+// EventPost 事件上报
+type EventPost struct {
+	Sys    Sys             `json:"sys"`
+	Params model.EventData `json:"params"`
+}
 
-// serverConnHandler 用户可以根据项目需要自行修改此方法的业务逻辑！
-func serverConnHandler(conn net.Conn) {
-	switch config.GetConfig().TcpUnpackRule.RuleName {
-	case config.RuleDelimiter:
-		delimiterConnHandler(conn)
-	case config.RuleFixedLength:
-		fixLengthConnHandler(conn)
-	default:
-		delimiterConnHandler(conn)
-	}
+func BytesToEventStruct(b []byte) (EventPost, error) {
+	var event EventPost
+	var err error
+	err = json.Unmarshal(b, &event)
+	return event, err
 }

@@ -19,10 +19,21 @@ import (
 	"github.com/winc-link/hummingbird-sdk-go/service"
 )
 
+const (
+	RuleNone        = "none"        //不处理
+	RuleDelimiter   = "delimiter"   //分隔符
+	RuleFixedLength = "fixedLength" //固定长度
+	RuleFieldLength = "fieldLength" //长度字段
+)
+
 var baseConfig *BaseConfig
 
 type BaseConfig struct {
 	//用户自行定义结构体中信息。
+	TcpUnpackRule struct {
+		RuleName string `json:"rule_name"`
+		BytesLen int    `json:"bytes_len"`
+	} `json:"tcp_unpack_rule"`
 }
 
 func InitConfig(sd *service.DriverService) {

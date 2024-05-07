@@ -13,22 +13,3 @@
  *******************************************************************************/
 
 package server
-
-import (
-	"github.com/winc-link/hummingbird-tcp-driver/config"
-	"net"
-)
-
-type TcpDataHandlers func(deviceSn string, data []byte) (retBuff []byte, err error)
-
-// serverConnHandler 用户可以根据项目需要自行修改此方法的业务逻辑！
-func serverConnHandler(conn net.Conn) {
-	switch config.GetConfig().TcpUnpackRule.RuleName {
-	case config.RuleDelimiter:
-		delimiterConnHandler(conn)
-	case config.RuleFixedLength:
-		fixLengthConnHandler(conn)
-	default:
-		delimiterConnHandler(conn)
-	}
-}

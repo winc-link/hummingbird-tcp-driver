@@ -15,6 +15,7 @@
 package server
 
 import (
+	"github.com/winc-link/hummingbird-sdk-go/model"
 	"github.com/winc-link/hummingbird-sdk-go/service"
 	"net"
 	"sync"
@@ -23,8 +24,9 @@ import (
 var GlobalDriverService *service.DriverService
 
 type TcpServer struct {
-	ClientCons map[string]*Connect
-	Lock       sync.RWMutex
+	ClientCons     map[string]*Connect
+	ConnAddrMapDev map[string]*model.Device
+	Lock           sync.RWMutex
 }
 
 type Connect struct {
@@ -36,24 +38,25 @@ var tcpServer = &TcpServer{}
 
 func init() {
 	tcpServer = &TcpServer{
-		ClientCons: map[string]*Connect{},
+		ClientCons:     map[string]*Connect{},
+		ConnAddrMapDev: map[string]*model.Device{},
 	}
 }
 
 // Start 启动tcp服务器
-func (t *TcpServer) Start(sd *service.DriverService, tdh TcpDataHandlers) {
+func (t *TcpServer) Start(sd *service.DriverService) {
 	GlobalDriverService = sd
-	server, err := net.Listen("tcp", "")
+	listener, err := net.Listen("tcp", ":7653")
 	if err != nil {
 		panic(err)
 	}
-	defer server.Close()
+	defer listener.Close()
 	for {
-		conn, err := server.Accept()
+		conn, err := listener.Accept()
 		if err != nil {
 			panic(err)
 		}
-		go serverConnHandler(conn, tdh)
+		go serverConnHandler(conn)
 	}
 }
 
@@ -61,8 +64,8 @@ func GetTcpServer() *TcpServer {
 	return tcpServer
 }
 
-func (t *TcpServer) GetConnectByDeviceSn(deviceSn string) *Connect {
-	return t.ClientCons[deviceSn]
+func (t *TcpServer) GetConnectByDeviceId(deviceId string) *Connect {
+	return t.ClientCons[deviceId]
 }
 
 func (t *TcpServer) DeleteClientByDeviceId(deviceSn string) {
