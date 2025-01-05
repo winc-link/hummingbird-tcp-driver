@@ -2,7 +2,7 @@ module github.com/winc-link/hummingbird-tcp-driver
 
 go 1.18
 
-require github.com/winc-link/hummingbird-sdk-go v0.0.0-20231029081056-0fbd6a6e006c
+require github.com/winc-link/hummingbird-sdk-go v0.0.0-20241218060555-0a5bdb7ad540
 
 require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
