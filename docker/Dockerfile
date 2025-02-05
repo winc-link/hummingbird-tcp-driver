@@ -1,4 +1,4 @@
-ARG BASE=golang:1.17-alpine
+ARG BASE=registry.cn-shanghai.aliyuncs.com/winc-edgex/edgex:go1.23.1-alpine3.16
 FROM ${BASE} AS builder
 
 # set the working directory
@@ -8,7 +8,7 @@ COPY . .
 
 RUN go build -ldflags "-s -w" -o  ./cmd/build/driver-linux-amd64  ./cmd
 
-FROM alpine:3.12
+FROM registry.cn-shanghai.aliyuncs.com/winc-edgex/alpine:3.13
 
 COPY --from=builder /simple-driver/cmd/build/driver-linux-amd64 /app/
 

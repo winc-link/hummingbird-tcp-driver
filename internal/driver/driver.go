@@ -30,11 +30,6 @@ type TcpProtocolDriver struct {
 	sd *service.DriverService
 }
 
-// CloudPluginNotify 云插件启动/停止通知
-func (dr TcpProtocolDriver) CloudPluginNotify(ctx context.Context, t commons.CloudPluginNotifyType, name string) error {
-	return nil
-}
-
 // DeviceNotify 设备添加/修改/删除通知
 func (dr TcpProtocolDriver) DeviceNotify(ctx context.Context, t commons.DeviceNotifyType, deviceId string, device model.Device) error {
 	return nil

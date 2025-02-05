@@ -15,14 +15,13 @@
 package main
 
 import (
-	"github.com/winc-link/hummingbird-sdk-go/commons"
 	"github.com/winc-link/hummingbird-sdk-go/service"
 	"github.com/winc-link/hummingbird-tcp-driver/config"
 	"github.com/winc-link/hummingbird-tcp-driver/internal/driver"
 )
 
 func main() {
-	driverService := service.NewDriverService("hummingbird-official-tcp-driver", commons.HummingbirdIot)
+	driverService := service.NewDriverService("official-tcp-driver-v2")
 	config.InitConfig(driverService)
 	tcpDriver := driver.NewTcpProtocolDriver(driverService)
 	if err := driverService.Start(tcpDriver); err != nil {
